@@ -1,10 +1,8 @@
 
-import './App.css';
 import InputForm from './components/InputForm/InputForm';
-
 function App() {
   return (
-    <div className="App">
+    <div>
      <InputForm/>
     </div>
   );
