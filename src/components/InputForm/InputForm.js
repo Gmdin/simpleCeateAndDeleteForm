@@ -1,10 +1,12 @@
 import Card from "../UI/Card/Card";
 import Button from "../UI/Button/Button";
 import classes from './InputForm.module.css';
+import ErrorModel from "../ErrorModel/ErrorModel";
 import { useState } from "react";
 const InputForm=(props)=>{
 const [name,setName]=useState('');
 const [age,setAge]=useState('');
+const [error,setError]=useState();
     const handleNameField=event=>{
             setName(event.target.value);
     }
@@ -14,22 +16,31 @@ const [age,setAge]=useState('');
 
     const submintHandler=event=>{
         event.preventDefault();
-        if(name==='' && age===''){
-            alert("Username and age must be required");
+        if(name.trim().length===0 || age.trim().length===0){
+            setError({
+                title:"Invalid Input",
+                message:"Name and age must be entered"
+            })
         }
-        else if(name===''){
-            alert('Username must be entered');
-        }
-        else if(age===''){
-            alert('Age must be entered');
+        else if(+age<1){
+            setError({
+                title:"Invalid Age",
+                message:"Age must be >0"
+            })
         }
         else{
+            props.onFormSubmit(name,age);
             setAge('');
             setName('');
         }
     }
+    const errorHandler=()=>{
+        setError(null);
+    }
 
     return(
+        <div>
+       {error&&<ErrorModel title={error.title}  content={error.message} onConfirm={errorHandler}/>}
         <Card className={classes.input}>
         <form onSubmit={submintHandler}>
             <label htmlFor='username' >Username</label>
@@ -39,6 +50,7 @@ const [age,setAge]=useState('');
             <Button type="submit">Add user</Button>
         </form>
         </Card>
+        </div>
     )
 }
 export  default InputForm;
